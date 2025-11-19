@@ -1,7 +1,6 @@
 package com.petcommunity.common.exception;
 
 import com.petcommunity.common.result.Result;
-import com.petcommunity.common.result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -28,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Result<?> handleBusinessException(BusinessException e) {
         log.error("业务异常: {}", e.getMessage());
-        return Result.error(e.getCode(), e.getMessage());
+        return Result.error(e.getMessage());
     }
 
     /**
@@ -39,7 +38,7 @@ public class GlobalExceptionHandler {
         FieldError fieldError = e.getBindingResult().getFieldError();
         String message = fieldError != null ? fieldError.getDefaultMessage() : "参数校验失败";
         log.error("参数校验异常: {}", message);
-        return Result.error(ResultCode.PARAM_ERROR.getCode(), message);
+        return Result.error(message);
     }
 
     /**
@@ -50,7 +49,7 @@ public class GlobalExceptionHandler {
         FieldError fieldError = e.getBindingResult().getFieldError();
         String message = fieldError != null ? fieldError.getDefaultMessage() : "参数绑定失败";
         log.error("参数绑定异常: {}", message);
-        return Result.error(ResultCode.PARAM_ERROR.getCode(), message);
+        return Result.error(message);
     }
 
     /**
@@ -59,7 +58,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public Result<?> handleTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.error("参数类型不匹配: {}", e.getMessage());
-        return Result.error(ResultCode.PARAM_ERROR.getCode(), "参数类型不匹配");
+        return Result.error("参数类型不匹配");
     }
 
     /**
@@ -68,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public Result<?> handleAccessDeniedException(AccessDeniedException e) {
         log.error("访问拒绝: {}", e.getMessage());
-        return Result.result(ResultCode.FORBIDDEN);
+        return Result.error("禁止访问");
     }
 
     /**
