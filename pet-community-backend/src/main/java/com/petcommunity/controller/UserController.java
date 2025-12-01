@@ -5,10 +5,12 @@ import com.petcommunity.dto.LoginDTO;
 import com.petcommunity.dto.RegisterDTO;
 import com.petcommunity.entity.User;
 import com.petcommunity.service.UserService;
+import com.petcommunity.vo.RegisterVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,7 +24,7 @@ import java.util.Map;
  */
 @Tag(name = "用户管理", description = "用户注册、登录、信息管理等接口")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -30,11 +32,13 @@ public class UserController {
 
     @Operation(summary = "用户注册")
     @PostMapping("/register")
-    public Result<User> register(@Valid @RequestBody RegisterDTO registerDTO) {
+    public Result<RegisterVO> register(@Valid @RequestBody RegisterDTO registerDTO) {
         User user = userService.register(registerDTO);
         // 清空密码字段，不返回给前端
-        user.setPassword(null);
-        return Result.success(user);
+//        user.setPassword(null);
+        RegisterVO registerVO = new RegisterVO();
+        BeanUtils.copyProperties(user, registerVO);
+        return Result.success(registerVO);
     }
 
     @Operation(summary = "用户登录")
@@ -53,8 +57,8 @@ public class UserController {
 
     @Operation(summary = "获取当前用户信息")
     @GetMapping("/info")
-    public Result<User> getUserInfo(@RequestParam String username) {
-        User user = userService.getUserByUsername(username);
+    public Result<User> getUserInfo() {
+        User user = userService.getAutoUserById();
         user.setPassword(null);
         return Result.success(user);
     }

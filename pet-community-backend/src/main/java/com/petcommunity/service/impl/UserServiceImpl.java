@@ -1,5 +1,6 @@
 package com.petcommunity.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.petcommunity.common.exception.BusinessException;
 import com.petcommunity.common.result.ResultCode;
@@ -8,7 +9,6 @@ import com.petcommunity.dto.RegisterDTO;
 import com.petcommunity.entity.User;
 import com.petcommunity.mapper.UserMapper;
 import com.petcommunity.service.UserService;
-import com.petcommunity.utils.JwtUtil;
 import com.petcommunity.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-    private final JwtUtil jwtUtil;
+//    private final JwtUtil jwtUtil;
 
     @Override
     public User register(RegisterDTO registerDTO) {
@@ -50,10 +50,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public String login(LoginDTO loginDTO) {
         // 查询用户
+        System.out.println("输入的用户名"+loginDTO.getUsername());
         User user = getUserByUsername(loginDTO.getUsername());
         if (user == null) {
             throw new BusinessException(ResultCode.LOGIN_ERROR);
         }
+        System.out.println("输入的密码"+loginDTO.getPassword());
 
         // 验证密码
         if (!PasswordUtil.matches(loginDTO.getPassword(), user.getPassword())) {
@@ -65,8 +67,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultCode.USER_DISABLED);
         }
 
+        System.out.println("用户id"+user.getUserId());
+        StpUtil.login(user.getUserId());
+
         // 生成Token
-        return jwtUtil.generateToken(user.getUsername());
+        return StpUtil.getTokenValue();
     }
 
     @Override
@@ -102,6 +107,17 @@ public class UserServiceImpl implements UserService {
         // 更新密码
         user.setPassword(PasswordUtil.encode(newPassword));
         return userMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public User getAutoUserById() {
+        long userId =StpUtil.getLoginIdAsLong();
+        return getUserById(userId);
+    }
+
+    @Override
+    public User getById(int i) {
+        return getUserById((long) i);
     }
 
 }

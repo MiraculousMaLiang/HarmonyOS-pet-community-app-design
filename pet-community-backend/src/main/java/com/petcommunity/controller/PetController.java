@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Tag(name = "宠物档案管理", description = "宠物信息管理相关接口")
 @RestController
-@RequestMapping("/api/pet")
+@RequestMapping("/pet")
 @RequiredArgsConstructor
 public class PetController {
 

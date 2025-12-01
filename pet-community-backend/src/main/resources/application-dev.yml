@@ -1,10 +1,12 @@
 server:
   port: 8080
+  servlet:
+      context-path: /api
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pet_community?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://111.228.33.100:3306/pet_community?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     hikari:
@@ -17,9 +19,9 @@ spring:
   # Redis配置(可选)
   data:
     redis:
-      host: localhost
+      host: 111.228.33.100
       port: 6379
-      password:
+      password: 123456
       database: 0
       timeout: 3000
       lettuce:

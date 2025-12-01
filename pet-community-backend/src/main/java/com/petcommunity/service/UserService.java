@@ -62,4 +62,7 @@ public interface UserService {
      */
     boolean changePassword(Long userId, String oldPassword, String newPassword);
 
+    User getAutoUserById();
+
+    User getById(int i);
 }

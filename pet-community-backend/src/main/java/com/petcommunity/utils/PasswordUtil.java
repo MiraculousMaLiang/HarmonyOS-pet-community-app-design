@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class PasswordUtil {
 
-    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder(10);
 
     /**
      * 加密密码
